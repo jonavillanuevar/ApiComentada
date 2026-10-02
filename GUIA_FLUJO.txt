@@ -1,0 +1,27 @@
+API CLINICA - MAPA DEL FLUJO PARA ESTUDIAR
+
+REGISTRAR MEDICAMENTO
+1. Bruno envia JSON a POST /med/registrar.
+2. @RequestBody lo convierte a MedicamentoDTO.
+3. @Valid revisa las anotaciones del DTO.
+4. Si hay error -> ValidationHandler -> HTTP 400.
+5. Si es valido -> ModelMapper convierte DTO a Medicamento.
+6. MedicamentoServices.grabar() verifica si el nombre ya existe.
+7. Si existe -> BusinessException -> ValidationHandler -> HTTP 409.
+8. Si no existe -> registrar() heredado de ICRUDImpl.
+9. ICRUDImpl llama repo().save().
+10. MedicamentoRepository/JPA guarda en MySQL.
+11. La entidad guardada regresa al Controller.
+12. ModelMapper la convierte a MedicamentoDTO.
+13. ApiResponse envuelve la respuesta.
+14. ResponseEntity responde HTTP 201 Created.
+
+BUSCAR MEDICAMENTO
+Controller -> Service -> ICRUDImpl.buscar -> Repository.findById -> BD.
+Si no existe -> ModeloNotFoundException -> ValidationHandler -> HTTP 404.
+Si existe -> Entidad -> DTO -> ApiResponse -> HTTP 200.
+
+COMPARACION IMPORTANTE
+LaboratorioController = version CRUD mas directa.
+MedicamentoController  = version enriquecida con DTO, Mapper, validacion,
+                         respuesta estandar y manejo de errores.
